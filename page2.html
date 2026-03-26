@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>🌸 Pilih Destinasi Kita! 🌸</title>
+  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --pink-deep: #e91e8c;
+      --pink-mid: #f06292;
+      --pink-light: #f8bbd0;
+      --pink-pale: #fce4ec;
+      --pink-soft: #fff0f5;
+      --gold: #f5c842;
+      --white: #fff;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      min-height: 100vh;
+      background: linear-gradient(160deg, #fce4ec 0%, #fff0f5 50%, #fce4ec 100%);
+      font-family: 'Nunito', sans-serif;
+      overflow-x: hidden;
+    }
+
+    /* Hearts */
+    .hearts-bg { position: fixed; inset: 0; pointer-events: none; z-index: 0; overflow: hidden; }
+    .heart { position: absolute; opacity: 0; animation: floatUp linear infinite; }
+    @keyframes floatUp {
+      0%   { transform: translateY(110vh) rotate(0deg); opacity: 0; }
+      10%  { opacity: 0.7; }
+      90%  { opacity: 0.4; }
+      100% { transform: translateY(-10vh) rotate(360deg); opacity: 0; }
+    }
+
+    /* Confetti */
+    .confetti-piece {
+      position: fixed; width: 10px; height: 10px;
+      opacity: 0; animation: confettiFall linear infinite;
+      pointer-events: none; z-index: 1;
+    }
+    @keyframes confettiFall {
+      0%   { transform: translateY(-20px) rotate(0deg); opacity: 1; }
+      100% { transform: translateY(110vh) rotate(720deg); opacity: 0; }
+    }
+
+    main {
+      position: relative; z-index: 2;
+      padding: 40px 20px 60px;
+      max-width: 680px; margin: 0 auto;
+    }
+
+    .ribbon-wrap { text-align: center; margin-bottom: 10px; }
+    .ribbon {
+      display: inline-block;
+      background: linear-gradient(135deg, var(--pink-deep), var(--pink-mid));
+      color: #fff; font-family: 'Dancing Script', cursive;
+      font-size: 1.1rem; padding: 6px 28px; border-radius: 30px;
+      letter-spacing: 1px; box-shadow: 0 4px 14px rgba(233,30,140,.35);
+      animation: pulse 2s ease-in-out infinite;
+    }
+    @keyframes pulse { 0%,100%{transform:scale(1)} 50%{transform:scale(1.04)} }
+
+    .card {
+      background: var(--white); border-radius: 32px;
+      padding: 36px 32px 40px;
+      box-shadow: 0 12px 40px rgba(233,30,140,.18);
+      border: 2px solid var(--pink-light);
+      animation: fadeInUp .8s ease both;
+    }
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(40px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .balloons { text-align: center; font-size: 2.2rem; letter-spacing: 4px; margin-bottom: 8px; animation: sway 3s ease-in-out infinite; }
+    @keyframes sway { 0%,100%{transform:rotate(-3deg)} 50%{transform:rotate(3deg)} }
+
+    .couple { text-align: center; margin-bottom: 6px; }
+    .couple-names { font-family: 'Dancing Script', cursive; font-size: 2.6rem; color: var(--pink-deep); text-shadow: 2px 2px 0 var(--pink-light); }
+    .couple-amp { display: block; font-size: 1.8rem; color: var(--gold); margin: 2px 0; }
+
+    .ornament { text-align: center; color: var(--pink-mid); font-size: 1.3rem; letter-spacing: 6px; margin: 16px 0; }
+
+    /* Gift reveal */
+    .gift-reveal {
+      background: linear-gradient(135deg, var(--pink-pale), #fff);
+      border: 2px dashed var(--pink-mid);
+      border-radius: 20px;
+      padding: 16px 24px;
+      text-align: center;
+      margin-bottom: 4px;
+    }
+    .gift-reveal-label { font-size: .85rem; color: #b0587a; margin-bottom: 4px; }
+    .gift-reveal-value {
+      font-family: 'Dancing Script', cursive;
+      font-size: 1.6rem; color: var(--pink-deep);
+    }
+
+    /* Section */
+    .section-title {
+      font-family: 'Dancing Script', cursive;
+      font-size: 1.7rem; color: var(--pink-deep);
+      text-align: center; margin: 28px 0 6px;
+    }
+    .section-sub { text-align: center; color: #b0587a; font-size: .9rem; margin-bottom: 18px; }
+
+    /* Destination options */
+    .dest-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+    .dest-btn {
+      display: flex; flex-direction: column; align-items: center; gap: 8px;
+      background: linear-gradient(160deg, var(--pink-pale), var(--white));
+      border: 2px solid var(--pink-light); border-radius: 20px;
+      padding: 22px 12px; cursor: pointer;
+      transition: all .25s ease; text-decoration: none; color: inherit;
+      box-shadow: 0 4px 14px rgba(233,30,140,.1);
+      position: relative; overflow: hidden;
+    }
+    .dest-btn::before {
+      content:''; position:absolute; inset:0;
+      background: linear-gradient(135deg, var(--pink-deep), var(--pink-mid));
+      opacity: 0; transition: opacity .25s; border-radius: 18px;
+    }
+    .dest-btn:hover::before { opacity: 1; }
+    .dest-btn:hover .dest-emoji,
+    .dest-btn:hover .dest-label,
+    .dest-btn:hover .dest-letter { color:#fff; }
+    .dest-btn:hover { transform: translateY(-5px); box-shadow: 0 10px 28px rgba(233,30,140,.35); border-color: var(--pink-deep); }
+    .dest-emoji { font-size: 2rem; position: relative; z-index: 1; }
+    .dest-letter { font-family: 'Dancing Script', cursive; font-size: 1.3rem; color: var(--pink-deep); position: relative; z-index: 1; font-weight: 700; }
+    .dest-label { font-size: .82rem; color: #b0587a; position: relative; z-index: 1; text-align: center; }
+
+    /* Thank you box */
+    .thankyou-box {
+      background: linear-gradient(135deg, #fce4ec, #fff0f5);
+      border: 2px solid var(--pink-light); border-radius: 20px;
+      padding: 22px 24px; text-align: center; margin-top: 28px;
+      display: none;
+      animation: fadeInUp .5s ease both;
+    }
+    .thankyou-box.show { display: block; }
+    .thankyou-emoji { font-size: 2.5rem; display: block; margin-bottom: 8px; }
+    .thankyou-title { font-family: 'Dancing Script', cursive; font-size: 1.8rem; color: var(--pink-deep); margin-bottom: 6px; }
+    .thankyou-text { font-size: .9rem; color: #7b3a5a; line-height: 1.7; }
+    .thankyou-choice { font-family: 'Dancing Script', cursive; font-size: 1.4rem; color: var(--pink-mid); }
+
+    .footer-note { text-align: center; margin-top: 28px; font-size: .85rem; color: #c07090; line-height: 1.8; }
+    .footer-note strong { color: var(--pink-deep); }
+
+    @media (max-width: 420px) {
+      .couple-names { font-size: 2rem; }
+      .dest-grid { gap: 10px; }
+      .card { padding: 24px 14px 28px; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="hearts-bg" id="heartsBg"></div>
+
+<main>
+  <div class="ribbon-wrap">
+    <span class="ribbon">🌸 Satu Pertanyaan Lagi~ 🌸</span>
+  </div>
+
+  <div class="card">
+
+    <div class="balloons">🌴🏔️🛁🏖️🌸</div>
+
+    <div class="couple">
+      <div class="couple-names">
+        Rizki
+        <span class="couple-amp">💕 &amp; 💕</span>
+        Aulia
+      </div>
+    </div>
+
+    <div class="ornament">✦ ♡ ✦ ♡ ✦</div>
+
+    <!-- Show gift choice from page 1 -->
+    <div class="gift-reveal" id="giftReveal" style="display:none">
+      <div class="gift-reveal-label">🎁 Hadiah pilihanmu:</div>
+      <div class="gift-reveal-value" id="giftValue">—</div>
+    </div>
+
+    <!-- Destination section -->
+    <div class="section-title">✈️ Mau Liburan ke mana?</div>
+    <p class="section-sub">Pilih destinasi impianmu bareng aku~ 💝</p>
+
+    <div class="dest-grid">
+      <!-- A: Pantai -->
+      <button class="dest-btn" onclick="chooseDestination('A', 'Mantai 🏖️')">
+        <span class="dest-emoji">🏖️</span>
+        <span class="dest-letter">A</span>
+        <span class="dest-label">Mantai</span>
+      </button>
+
+      <!-- B: Muncak -->
+      <button class="dest-btn" onclick="chooseDestination('B', 'Muncak 🏔️')">
+        <span class="dest-emoji">🏔️</span>
+        <span class="dest-letter">B</span>
+        <span class="dest-label">Muncak</span>
+      </button>
+
+      <!-- C: Staycation -->
+      <button class="dest-btn" onclick="chooseDestination('C', 'Staycation 🛁')">
+        <span class="dest-emoji">🛁</span>
+        <span class="dest-letter">C</span>
+        <span class="dest-label">Staycation</span>
+      </button>
+    </div>
+
+    <!-- Thank you reveal -->
+    <div class="thankyou-box" id="thankyouBox">
+      <span class="thankyou-emoji">🎉</span>
+      <div class="thankyou-title">Yaaay, noted sayang~</div>
+      <p class="thankyou-text">
+        Kamu pilih <span class="thankyou-choice" id="destValue">—</span>!<br>
+        Aku sudah catat semua keinginanmu. Tinggal tunggu kejutannya ya! 🥰
+      </p>
+    </div>
+
+    <div class="footer-note">
+      <strong>Happy Birthday, my love ❤️</strong><br>
+      Semua yang kamu mau, aku usahakan sepenuh hati ✨
+    </div>
+
+  </div>
+</main>
+
+<script>
+  /* ── Read gift choice from page 1 ── */
+  window.addEventListener('DOMContentLoaded', () => {
+    const gift = localStorage.getItem('birthdayGiftChoice');
+    if (gift) {
+      document.getElementById('giftReveal').style.display = 'block';
+      document.getElementById('giftValue').textContent = gift;
+    }
+  });
+
+  /* ── Destination choice ── */
+  function chooseDestination(letter, label) {
+    localStorage.setItem('birthdayDestChoice', label);
+    document.getElementById('destValue').textContent = label;
+    document.getElementById('thankyouBox').classList.add('show');
+
+    // Burst confetti on choice
+    burstConfetti();
+
+    // Scroll to thank you
+    setTimeout(() => {
+      document.getElementById('thankyouBox').scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }, 100);
+  }
+
+  /* ── Floating hearts ── */
+  const heartContainer = document.getElementById('heartsBg');
+  const heartSymbols = ['💕','🩷','💗','💓','🌸','✨','🎀','🌴','🏔️'];
+  for (let i = 0; i < 22; i++) {
+    const h = document.createElement('span');
+    h.className = 'heart';
+    h.textContent = heartSymbols[Math.floor(Math.random() * heartSymbols.length)];
+    h.style.left = Math.random() * 100 + 'vw';
+    h.style.fontSize = (1 + Math.random() * 1.2) + 'rem';
+    h.style.animationDuration = (8 + Math.random() * 12) + 's';
+    h.style.animationDelay = (Math.random() * 10) + 's';
+    heartContainer.appendChild(h);
+  }
+
+  /* ── Background confetti ── */
+  const colors = ['#f06292','#e91e8c','#f8bbd0','#f5c842','#fff','#ce93d8'];
+  function makeConfettiPiece() {
+    const c = document.createElement('div');
+    c.className = 'confetti-piece';
+    c.style.left = Math.random() * 100 + 'vw';
+    c.style.background = colors[Math.floor(Math.random() * colors.length)];
+    const s = (6 + Math.random() * 8) + 'px';
+    c.style.width = s; c.style.height = s;
+    c.style.borderRadius = Math.random() > .5 ? '50%' : '2px';
+    c.style.animationDuration = (4 + Math.random() * 7) + 's';
+    c.style.animationDelay = (Math.random() * 6) + 's';
+    document.body.appendChild(c);
+  }
+  for (let i = 0; i < 30; i++) makeConfettiPiece();
+
+  function burstConfetti() {
+    for (let i = 0; i < 20; i++) makeConfettiPiece();
+  }
+</script>
+</body>
+</html>
