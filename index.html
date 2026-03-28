@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>🎂 Happy Birthday Aulia! 🎂</title>
+  <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;600;700;800&family=Fredoka+One&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --black: #1a1a2e;
+      --white: #ffffff;
+      --yellow: #FFD93D;
+      --coral: #FF6B6B;
+      --mint: #6BCB77;
+      --sky: #4D96FF;
+      --purple: #C77DFF;
+      --light-bg: #F9F9F9;
+    }
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body {
+      background: var(--light-bg);
+      font-family: 'Nunito', sans-serif;
+      color: var(--black);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+    body::before {
+      content:'';
+      position: fixed; inset:0;
+      background-image: radial-gradient(circle, #ddd 1.5px, transparent 1.5px);
+      background-size: 28px 28px;
+      z-index: 0; pointer-events: none;
+    }
+    #particleCanvas { position:fixed; inset:0; z-index:1; pointer-events:none; }
+
+    main { position:relative; z-index:2; max-width:700px; margin:0 auto; padding:30px 18px 70px; }
+
+    /* Badge */
+    .top-badge { display:flex; justify-content:center; margin-bottom:18px; animation: bounceIn .7s cubic-bezier(.36,.07,.19,.97) both; }
+    .badge-pill {
+      background: var(--black); color: var(--yellow);
+      font-family:'Fredoka One',cursive; font-size:1rem;
+      padding:8px 26px; border-radius:50px; letter-spacing:1.5px;
+      display:flex; align-items:center; gap:8px;
+      box-shadow: 4px 4px 0 var(--yellow);
+    }
+
+    /* Hero card */
+    .hero-card {
+      background: var(--white); border:3px solid var(--black);
+      border-radius:28px; box-shadow:8px 8px 0 var(--black);
+      overflow:hidden; animation: slideUp .8s cubic-bezier(.16,1,.3,1) both; animation-delay:.1s;
+    }
+    .hero-strip {
+      background: var(--black); padding:18px 28px;
+      display:flex; align-items:center; justify-content:space-between;
+    }
+    .strip-text { font-family:'Fredoka One',cursive; color:var(--yellow); font-size:1rem; letter-spacing:2px; }
+    .strip-icons { font-size:1.4rem; letter-spacing:4px; }
+    .hero-body { padding:32px 28px 28px; }
+
+    /* Cake */
+    .cake-wrap { text-align:center; margin-bottom:22px; }
+    .cake-svg { width:160px; height:auto; filter:drop-shadow(4px 6px 0 rgba(0,0,0,.12)); animation:float 3s ease-in-out infinite; }
+    @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-10px)} }
+
+    /* Names */
+    .names-block { text-align:center; margin-bottom:6px; }
+    .birthday-label { font-family:'Fredoka One',cursive; font-size:.85rem; letter-spacing:3px; color:#999; text-transform:uppercase; margin-bottom:4px; }
+    .main-name { font-family:'Baloo 2',cursive; font-size:3.2rem; font-weight:800; color:var(--black); line-height:1; position:relative; display:inline-block; }
+    .main-name span { position:relative; z-index:1; }
+    .name-highlight { position:absolute; bottom:6px; left:-4px; right:-4px; height:18px; background:var(--yellow); z-index:0; border-radius:4px; }
+    .age-badge {
+      display:inline-flex; align-items:center; justify-content:center;
+      background:var(--coral); color:#fff;
+      font-family:'Fredoka One',cursive; font-size:1rem;
+      width:48px; height:48px; border-radius:50%;
+      border:3px solid var(--black); box-shadow:3px 3px 0 var(--black);
+      margin-left:10px; vertical-align:middle;
+      animation:spin 6s linear infinite;
+    }
+    @keyframes spin { 0%{transform:rotate(0)} 100%{transform:rotate(360deg)} }
+
+    /* Zigzag */
+    .zigzag {
+      width:100%; height:14px;
+      background: repeating-linear-gradient(-45deg,var(--yellow) 0,var(--yellow) 8px,var(--black) 8px,var(--black) 10px);
+      border-radius:4px; margin:22px 0;
+    }
+
+    /* Info grid */
+    .info-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+    .info-tile {
+      border:2.5px solid var(--black); border-radius:16px; padding:14px 16px;
+      box-shadow:4px 4px 0 var(--black); display:flex; align-items:flex-start; gap:10px;
+    }
+    .info-tile.yellow { background:#FFF9D6; }
+    .info-tile.mint   { background:#E8FBE8; }
+    .info-tile.sky    { background:#E8F2FF; }
+    .info-tile.coral  { background:#FFE8E8; }
+    .info-tile-icon { font-size:1.6rem; flex-shrink:0; }
+    .info-tile-label { font-size:.72rem; font-weight:800; color:#888; text-transform:uppercase; letter-spacing:1px; }
+    .info-tile-value { font-size:.92rem; font-weight:700; color:var(--black); margin-top:2px; line-height:1.3; }
+
+    /* Gift section */
+    .gift-section {
+      margin-top:24px; background:var(--white);
+      border:3px solid var(--black); border-radius:28px;
+      box-shadow:8px 8px 0 var(--black); padding:28px 24px;
+      animation: slideUp .8s cubic-bezier(.16,1,.3,1) both; animation-delay:.25s;
+    }
+    .section-header { display:flex; align-items:center; gap:12px; margin-bottom:6px; }
+    .section-icon-box {
+      width:46px; height:46px; background:var(--yellow);
+      border:2.5px solid var(--black); border-radius:12px;
+      box-shadow:3px 3px 0 var(--black);
+      display:flex; align-items:center; justify-content:center; font-size:1.5rem; flex-shrink:0;
+    }
+    .section-title { font-family:'Baloo 2',cursive; font-size:1.5rem; font-weight:800; color:var(--black); }
+    .section-sub { font-size:.88rem; color:#777; margin-bottom:20px; margin-left:58px; margin-top:-4px; }
+
+    /* Gift grid */
+    .gift-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:14px; }
+    .gift-card {
+      border:2.5px solid var(--black); border-radius:20px; padding:18px 10px;
+      text-align:center; cursor:pointer; text-decoration:none;
+      display:flex; flex-direction:column; align-items:center; gap:8px;
+      transition:transform .15s ease, box-shadow .15s ease;
+      box-shadow:4px 4px 0 var(--black); position:relative; overflow:hidden;
+    }
+    .gift-card.a { background:#FFF3CD; }
+    .gift-card.b { background:#E8F4FD; }
+    .gift-card.c { background:#FDE8F5; }
+    .gift-card:hover { transform:translate(-3px,-3px); box-shadow:7px 7px 0 var(--black); }
+    .gift-card:active { transform:translate(2px,2px); box-shadow:2px 2px 0 var(--black); }
+    .gift-art { width:64px; height:64px; }
+    .gift-letter {
+      font-family:'Fredoka One',cursive; font-size:1rem;
+      background:var(--black); color:var(--white);
+      width:28px; height:28px; border-radius:50%;
+      display:flex; align-items:center; justify-content:center;
+    }
+    .gift-name { font-family:'Baloo 2',cursive; font-size:.9rem; font-weight:700; color:var(--black); }
+
+    /* Footer */
+    .footer-card {
+      margin-top:20px; background:var(--black);
+      border:3px solid var(--black); border-radius:20px; padding:20px 24px;
+      text-align:center; color:var(--white);
+      animation: slideUp .8s cubic-bezier(.16,1,.3,1) both; animation-delay:.4s;
+    }
+    .footer-card p { font-size:.9rem; color:#ccc; line-height:1.8; }
+    .footer-card strong { color:var(--yellow); font-family:'Fredoka One',cursive; font-size:1.1rem; }
+
+    @keyframes bounceIn { 0%{transform:scale(.3);opacity:0} 50%{transform:scale(1.05);opacity:1} 70%{transform:scale(.9)} 100%{transform:scale(1)} }
+    @keyframes slideUp { from{opacity:0;transform:translateY(50px)} to{opacity:1;transform:translateY(0)} }
+
+    @media(max-width:420px){
+      .main-name{font-size:2.4rem}
+      .info-grid{grid-template-columns:1fr}
+      .gift-grid{gap:10px}
+      .hero-body{padding:24px 16px 20px}
+    }
+  </style>
+</head>
+<body>
+<canvas id="particleCanvas"></canvas>
+<main>
+
+  <div class="top-badge">
+    <div class="badge-pill">🎉 SPECIAL INVITATION 🎉</div>
+  </div>
+
+  <div class="hero-card">
+    <div class="hero-strip">
+      <span class="strip-text">✦ BIRTHDAY PARTY ✦</span>
+      <span class="strip-icons">🎈🎀🎂</span>
+    </div>
+    <div class="hero-body">
+
+      <div class="cake-wrap">
+        <svg class="cake-svg" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+          <ellipse cx="100" cy="175" rx="80" ry="12" fill="#e0e0e0"/>
+          <rect x="30" y="130" width="140" height="45" rx="14" fill="#FFD93D" stroke="#1a1a2e" stroke-width="3"/>
+          <rect x="45" y="90" width="110" height="45" rx="12" fill="#FF6B6B" stroke="#1a1a2e" stroke-width="3"/>
+          <rect x="60" y="58" width="80" height="36" rx="10" fill="#4D96FF" stroke="#1a1a2e" stroke-width="3"/>
+          <ellipse cx="55" cy="130" rx="10" ry="6" fill="#fff" stroke="#1a1a2e" stroke-width="2"/>
+          <ellipse cx="100" cy="130" rx="10" ry="6" fill="#fff" stroke="#1a1a2e" stroke-width="2"/>
+          <ellipse cx="145" cy="130" rx="10" ry="6" fill="#fff" stroke="#1a1a2e" stroke-width="2"/>
+          <ellipse cx="70" cy="90" rx="8" ry="5" fill="#fff" stroke="#1a1a2e" stroke-width="2"/>
+          <ellipse cx="110" cy="90" rx="8" ry="5" fill="#fff" stroke="#1a1a2e" stroke-width="2"/>
+          <text x="48" y="158" font-size="16" text-anchor="middle">⭐</text>
+          <text x="100" y="158" font-size="16" text-anchor="middle">⭐</text>
+          <text x="152" y="158" font-size="16" text-anchor="middle">⭐</text>
+          <rect x="78" y="36" width="8" height="24" rx="4" fill="#C77DFF" stroke="#1a1a2e" stroke-width="2"/>
+          <rect x="96" y="30" width="8" height="30" rx="4" fill="#FF6B6B" stroke="#1a1a2e" stroke-width="2"/>
+          <rect x="114" y="36" width="8" height="24" rx="4" fill="#FFD93D" stroke="#1a1a2e" stroke-width="2"/>
+          <ellipse cx="82" cy="32" rx="5" ry="7" fill="#FFD93D" stroke="#1a1a2e" stroke-width="1.5"/>
+          <ellipse cx="100" cy="25" rx="5" ry="7" fill="#FF6B6B" stroke="#1a1a2e" stroke-width="1.5"/>
+          <ellipse cx="118" cy="32" rx="5" ry="7" fill="#FFD93D" stroke="#1a1a2e" stroke-width="1.5"/>
+          <circle cx="65" cy="112" r="5" fill="#fff" stroke="#1a1a2e" stroke-width="2"/>
+          <circle cx="135" cy="112" r="5" fill="#fff" stroke="#1a1a2e" stroke-width="2"/>
+          <circle cx="100" cy="112" r="5" fill="#fff" stroke="#1a1a2e" stroke-width="2"/>
+        </svg>
+      </div>
+
+      <div class="names-block">
+        <div class="birthday-label">Happy Birthday</div>
+        <div style="display:inline-flex;align-items:center;">
+          <div class="main-name">
+            <span>Aulia</span>
+            <div class="name-highlight"></div>
+          </div>
+          <div class="age-badge">10</div>
+        </div>
+      </div>
+
+      <div class="zigzag"></div>
+
+      <div class="info-grid">
+        <div class="info-tile yellow">
+          <div class="info-tile-icon">📅</div>
+          <div>
+            <div class="info-tile-label">Tanggal</div>
+            <div class="info-tile-value">Sabtu, 5 April 2025</div>
+          </div>
+        </div>
+        <div class="info-tile sky">
+          <div class="info-tile-icon">⏰</div>
+          <div>
+            <div class="info-tile-label">Waktu</div>
+            <div class="info-tile-value">19.00 WIB</div>
+          </div>
+        </div>
+        <div class="info-tile mint">
+          <div class="info-tile-icon">📍</div>
+          <div>
+            <div class="info-tile-label">Tempat</div>
+            <div class="info-tile-value">Kejutan spesial 🤫</div>
+          </div>
+        </div>
+        <div class="info-tile coral">
+          <div class="info-tile-icon">👗</div>
+          <div>
+            <div class="info-tile-label">Dress Code</div>
+            <div class="info-tile-value">Warna-Warni Ceria!</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Gift Section -->
+  <div class="gift-section">
+    <div class="section-header">
+      <div class="section-icon-box">🎁</div>
+      <div class="section-title">Pilih Hadiah Kamu!</div>
+    </div>
+    <div class="section-sub">Klik salah satu ya~ langsung dibuka hadiahnya! 🌟</div>
+
+    <div class="gift-grid">
+      <a class="gift-card a" href="page2.html" target="_blank" onclick="saveChoice('Bunga 🌸')">
+        <svg class="gift-art" viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
+          <rect x="37" y="44" width="6" height="26" rx="3" fill="#6BCB77" stroke="#1a1a2e" stroke-width="2"/>
+          <ellipse cx="30" cy="56" rx="11" ry="6" fill="#6BCB77" stroke="#1a1a2e" stroke-width="2" transform="rotate(-30 30 56)"/>
+          <ellipse cx="40" cy="22" rx="8" ry="12" fill="#FF6B6B" stroke="#1a1a2e" stroke-width="2"/>
+          <ellipse cx="22" cy="32" rx="8" ry="12" fill="#FFD93D" stroke="#1a1a2e" stroke-width="2" transform="rotate(60 22 32)"/>
+          <ellipse cx="58" cy="32" rx="8" ry="12" fill="#C77DFF" stroke="#1a1a2e" stroke-width="2" transform="rotate(-60 58 32)"/>
+          <ellipse cx="28" cy="14" rx="8" ry="12" fill="#4D96FF" stroke="#1a1a2e" stroke-width="2" transform="rotate(30 28 14)"/>
+          <ellipse cx="52" cy="14" rx="8" ry="12" fill="#FF6B6B" stroke="#1a1a2e" stroke-width="2" transform="rotate(-30 52 14)"/>
+          <circle cx="40" cy="28" r="10" fill="#FFD93D" stroke="#1a1a2e" stroke-width="2.5"/>
+          <circle cx="37" cy="25" r="2" fill="#1a1a2e"/>
+          <circle cx="43" cy="25" r="2" fill="#1a1a2e"/>
+          <path d="M36 30 Q40 34 44 30" stroke="#1a1a2e" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+        </svg>
+        <div class="gift-letter">A</div>
+        <div class="gift-name">Bunga</div>
+      </a>
+
+      <a class="gift-card b" href="page2.html" target="_blank" onclick="saveChoice('Boneka 🧸')">
+        <svg class="gift-art" viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
+          <ellipse cx="40" cy="54" rx="18" ry="20" fill="#C77DFF" stroke="#1a1a2e" stroke-width="2.5"/>
+          <ellipse cx="40" cy="56" rx="10" ry="12" fill="#e8ccff" stroke="#1a1a2e" stroke-width="1.5"/>
+          <circle cx="40" cy="28" r="18" fill="#FFD93D" stroke="#1a1a2e" stroke-width="2.5"/>
+          <circle cx="22" cy="16" r="8" fill="#FFD93D" stroke="#1a1a2e" stroke-width="2"/>
+          <circle cx="22" cy="16" r="4" fill="#FF6B6B"/>
+          <circle cx="58" cy="16" r="8" fill="#FFD93D" stroke="#1a1a2e" stroke-width="2"/>
+          <circle cx="58" cy="16" r="4" fill="#FF6B6B"/>
+          <circle cx="34" cy="26" r="4" fill="#1a1a2e"/>
+          <circle cx="46" cy="26" r="4" fill="#1a1a2e"/>
+          <circle cx="35" cy="25" r="1.5" fill="#fff"/>
+          <circle cx="47" cy="25" r="1.5" fill="#fff"/>
+          <ellipse cx="40" cy="32" rx="3" ry="2" fill="#FF6B6B" stroke="#1a1a2e" stroke-width="1"/>
+          <path d="M34 36 Q40 42 46 36" stroke="#1a1a2e" stroke-width="2" fill="none" stroke-linecap="round"/>
+          <ellipse cx="18" cy="54" rx="7" ry="12" fill="#FFD93D" stroke="#1a1a2e" stroke-width="2" transform="rotate(20 18 54)"/>
+          <ellipse cx="62" cy="54" rx="7" ry="12" fill="#FFD93D" stroke="#1a1a2e" stroke-width="2" transform="rotate(-20 62 54)"/>
+          <ellipse cx="30" cy="74" rx="9" ry="6" fill="#FFD93D" stroke="#1a1a2e" stroke-width="2"/>
+          <ellipse cx="50" cy="74" rx="9" ry="6" fill="#FFD93D" stroke="#1a1a2e" stroke-width="2"/>
+        </svg>
+        <div class="gift-letter">B</div>
+        <div class="gift-name">Boneka</div>
+      </a>
+
+      <a class="gift-card c" href="page2.html" target="_blank" onclick="saveChoice('Perhiasan 💍')">
+        <svg class="gift-art" viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
+          <path d="M20 50 Q40 62 60 50" stroke="#FFD93D" stroke-width="10" fill="none" stroke-linecap="round"/>
+          <path d="M20 50 Q40 38 60 50" stroke="#FFD93D" stroke-width="10" fill="none" stroke-linecap="round"/>
+          <path d="M20 50 Q40 62 60 50" stroke="#1a1a2e" stroke-width="3" fill="none" stroke-linecap="round"/>
+          <path d="M20 50 Q40 38 60 50" stroke="#1a1a2e" stroke-width="3" fill="none" stroke-linecap="round"/>
+          <polygon points="40,10 52,24 40,30 28,24" fill="#4D96FF" stroke="#1a1a2e" stroke-width="2.5"/>
+          <polygon points="40,10 52,24 40,18" fill="#87CEFA"/>
+          <polygon points="40,10 28,24 40,18" fill="#B0DFFF"/>
+          <line x1="28" y1="24" x2="32" y2="38" stroke="#FFD93D" stroke-width="4" stroke-linecap="round"/>
+          <line x1="52" y1="24" x2="48" y2="38" stroke="#FFD93D" stroke-width="4" stroke-linecap="round"/>
+          <text x="8" y="20" font-size="14">✨</text>
+          <text x="58" y="16" font-size="12">⭐</text>
+          <text x="12" y="70" font-size="11">💫</text>
+        </svg>
+        <div class="gift-letter">C</div>
+        <div class="gift-name">Perhiasan</div>
+      </a>
+    </div>
+  </div>
+
+  <div class="footer-card">
+    <p>
+      <strong>🎂 Selamat Ulang Tahun ke-10! 🎂</strong><br>
+      Semoga semua wish-mu terkabul dan hari ini jadi<br>
+      hari paling berkesan untukmu! ✨🌈
+    </p>
+  </div>
+
+</main>
+<script>
+  function saveChoice(gift) { localStorage.setItem('birthdayGiftChoice', gift); }
+
+  const canvas = document.getElementById('particleCanvas');
+  const ctx = canvas.getContext('2d');
+  canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+  window.addEventListener('resize', () => { canvas.width = window.innerWidth; canvas.height = window.innerHeight; });
+
+  const colors = ['#FFD93D','#FF6B6B','#6BCB77','#4D96FF','#C77DFF'];
+  class Particle {
+    constructor() { this.reset(true); }
+    reset(init) {
+      this.x = Math.random() * canvas.width;
+      this.y = init ? Math.random() * canvas.height : -20;
+      this.size = 6 + Math.random() * 8;
+      this.color = colors[Math.floor(Math.random() * colors.length)];
+      this.isSquare = Math.random() > .5;
+      this.speedY = .5 + Math.random() * 1;
+      this.speedX = (Math.random()-.5) * 1.2;
+      this.rotation = Math.random()*360;
+      this.rotSpeed = (Math.random()-.5)*3;
+    }
+    update() {
+      this.y += this.speedY; this.x += this.speedX; this.rotation += this.rotSpeed;
+      if (this.y > canvas.height+20) this.reset(false);
+    }
+    draw() {
+      ctx.save(); ctx.translate(this.x,this.y); ctx.rotate(this.rotation*Math.PI/180);
+      ctx.fillStyle = this.color; ctx.strokeStyle = '#1a1a2e'; ctx.lineWidth = 1.5;
+      if (this.isSquare) { ctx.beginPath(); ctx.rect(-this.size/2,-this.size/2,this.size,this.size); ctx.fill(); ctx.stroke(); }
+      else { ctx.beginPath(); ctx.arc(0,0,this.size/2,0,Math.PI*2); ctx.fill(); ctx.stroke(); }
+      ctx.restore();
+    }
+  }
+  const particles = Array.from({length:45}, () => new Particle());
+  function animate() { ctx.clearRect(0,0,canvas.width,canvas.height); particles.forEach(p=>{p.update();p.draw();}); requestAnimationFrame(animate); }
+  animate();
+</script>
+</body>
+</html>
